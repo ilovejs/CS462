@@ -23,8 +23,8 @@ public class BFS extends Configured implements Tool
 	  public void map(LongWritable key, Text value, Context context) throws IOException,
 	  InterruptedException
 	  {
-		  //split string up into components
-		  String line = value.toString();
+		  //split string up into components (after removing whitespace)
+		  String line = value.toString().trim();
 		  String[] keyVal = line.split("[|]");
 		  
 		  //set components to (node #, distance #, outlink #'s)
@@ -61,8 +61,9 @@ public class BFS extends Configured implements Tool
 	  }
   }
   
-  static class BFSReducer extends Reducer<IntWritable, Text, IntWritable, Text>
+  static class BFSReducer extends Reducer<IntWritable, Text, Text, Text>
   {
+	private Text blank = new Text("");
 	private Text word = new Text();
 	
     public void reduce(IntWritable key, Iterable<Text> values, Context context)
@@ -85,8 +86,8 @@ public class BFS extends Configured implements Tool
     	}
     	
     	//set output back to original, after computing new min_dist
-    	word.set(Integer.toString(min_dist) + "|" + link_string);
-    	context.write(key, word);
+    	word.set(key.toString() + "|" + Integer.toString(min_dist) + "|" + link_string);
+    	context.write(blank, word);
     }
   }
   

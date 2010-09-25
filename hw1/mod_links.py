@@ -1,8 +1,8 @@
 #!/usr/bin/python
 import re, sys
 
+# matches (#: # # # ... #)
 grouper = re.compile(r'(\d+): (.*)$')
-outFile = open('/media/SW_Preload/wiki-links.txt', 'w')
 
 def mod(line):
     groups = grouper.match(line)
@@ -11,18 +11,22 @@ def mod(line):
     node = int(groups.group(1))
     linkList = ';'.join(links)
 
+    # create string node#|DIST|outlink;list;#
+    # 3015959 == node with most outlinks (predetermined)
     string = ""
     if(node != 3015959):
         string = str(node)+"|"+str(sys.maxint)+"|"+linkList+"\n"
     if(node == 3015959):
         string = "3015959|0|"+linkList+"\n"
 
-    outFile.write(string)
+    # write new line to output
+    output.write(string)
     
 def main():
     lines = open(sys.argv[1], 'r').xreadlines()
+    output = open(sys.argv[2], 'w')
     for line in lines:
-        mod(line)
-    outFile.close()
+        mod(line, output)
+    output.close()
 
 main()

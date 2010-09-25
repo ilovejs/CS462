@@ -1,0 +1,3 @@
+HW1
+---
+Collect graph of something interesting. In this case I did wikipedia's graph. http://bit.ly/c9eOoj is a temporary link to the data I've collected and parsed so far. I've stored it on Amazon S3 so that I can use an EC2 Hadoop cluster to churn through it.

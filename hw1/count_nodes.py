@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import re,sys
 
-path = re.compile(r'\d+\|[0-7]\|\d+')
+path = re.compile(r'\s+\d+\|[0-7]\|\d+')
 
 def count(line):
     count = 0
@@ -15,3 +15,5 @@ def main():
     for line in lines:
         num_nodes += count(line)
     print num_nodes
+
+main()

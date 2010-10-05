@@ -1,0 +1,19 @@
+HW1
+---
+The 20,000 node connected component is in the component subfolder.
+
+BFS.java -- the MapReduce code I ran on AmazonEC2 with Cloudera Hadoop instances
+mod_links.py -- turned my 9GB of wikipedia's graph into one formatted for my BFS algorithm
+count_nodes.py -- allowed me to count how many nodes were reached in the BFS. Only needed 3 iterations.
+collect_nodes.py -- extracted the nodes reached by the BFS. Result was 'connected_component.txt'
+convert_component.py -- used igraph to attach metadata and construct graphml file from connected_component.txt
+measure_graph.py -- used igraph to measure assortativity and C(2) clustering of resulting graph
+
+RESULTS
+-------
+Assortativity: -0.234
+C(2): .614
+
+METADATA
+--------
+Title and Keywords for each node (wikipedia article)

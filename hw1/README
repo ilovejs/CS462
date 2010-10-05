@@ -11,6 +11,8 @@ measure_graph.py -- used igraph to measure assortativity and C(2) clustering of 
 
 RESULTS
 -------
+Nodes 18,547
+Edges 221,187
 Assortativity: -0.234
 C(2): .614
 

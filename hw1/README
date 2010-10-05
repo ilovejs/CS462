@@ -9,6 +9,8 @@ collect_nodes.py -- extracted the nodes reached by the BFS. Result was 'connecte
 convert_component.py -- used igraph to attach metadata and construct graphml file from connected_component.txt
 measure_graph.py -- used igraph to measure assortativity and C(2) clustering of resulting graph
 
+shell_sample.txt -- the commands I used to launch a persistent Cloudera Hadoop cluster and output from Hadoop
+
 RESULTS
 -------
 Nodes 18,547

@@ -1,0 +1,117 @@
+02:56 AM dougvk:~/.hadoop-cloud
+$hadoop-ec2 launch-cluster ebs-cluster 1 nn,snn,jt 1 dn,tt
+Waiting for 1 instances in role nn,snn,jt to start
+...................................nn,snn,jt instances started
+
+Waiting for 1 instances in role dn,tt to start
+..........................dn,tt instances started
+
+Waiting 10 seconds before attaching storage
+Attaching storage to i-d57d64bf
+Attaching vol-9294a6fb to i-d57d64bf
+Attaching vol-9494a6fd to i-d57d64bf
+Attaching storage to i-217c654b
+Attaching vol-8a94a6e3 to i-217c654b
+Attaching vol-8c94a6e5 to i-217c654b
+nn      vol-9294a6fb    25      snap-06bcaf6d   us-east-1a      in-use  2010-10-02T22:07:51.000Z        None
+nn      vol-9494a6fd    25      snap-06bcaf6d   us-east-1a      in-use  2010-10-02T22:07:52.000Z        None
+dn      vol-8a94a6e3    25      snap-06bcaf6d   us-east-1a      in-use  2010-10-02T22:07:45.000Z        None                                                                                                        
+dn      vol-8c94a6e5    25      snap-06bcaf6d   us-east-1a      in-use  2010-10-02T22:07:45.000Z        None                                                                                                        
+Waiting for jobtracker to start                                                                           
+.....................................................................................................................................................                                                               
+Waiting for 1 tasktrackers to start                                                                       
+..1.                                                                                                      
+Browse the cluster at http://ec2-184-72-78-33.compute-1.amazonaws.com/  
+06:19 PM dougvk:~/.hadoop-cloud
+$ scp -i pstam-keypair scp/wordsort.jar root@ec2-184-72-78-33.compute-1.amazonaws.com:~
+wordsort.jar                                                                                                                                                                                                     100% 5092     5.0KB/s   00:00    
+06:20 PM dougvk:~/.hadoop-cloud
+$ hadoop-ec2 login ebs-cluster
+Last login: Sat Oct  2 22:19:39 2010 from dhcp128036148235.central.yale.edu
+root@ip-10-245-70-98:~# hadoop fs -ls /user
+Found 1 items
+drwxrwxrwx   - hadoop supergroup          0 2010-10-02 22:12 /user/hive
+root@ip-10-245-70-98:~# hadoop fs -mkdir /user/root/input/
+root@ip-10-245-70-98:~# hadoop fs -put wiki-links.txt /user/root/input/
+root@ip-10-245-70-98:~# hadoop jar wordsort.jar /user/root/input/ /user/root/output/
+10/10/02 22:22:43 INFO input.FileInputFormat: Total input paths to process : 1
+10/10/02 22:22:43 INFO mapred.JobClient: Running job: job_201010022212_0001
+10/10/02 22:22:44 INFO mapred.JobClient:  map 0% reduce 0%
+10/10/02 22:23:29 INFO mapred.JobClient:  map 1% reduce 0%
+10/10/02 22:24:02 INFO mapred.JobClient:  map 2% reduce 0%
+10/10/02 22:24:35 INFO mapred.JobClient:  map 3% reduce 0%
+10/10/02 22:25:08 INFO mapred.JobClient:  map 4% reduce 0%
+10/10/02 22:25:38 INFO mapred.JobClient:  map 5% reduce 0%
+10/10/02 22:26:08 INFO mapred.JobClient:  map 6% reduce 0%
+........................................................................
+10/10/03 01:00:37 INFO mapred.JobClient:  map 100% reduce 100%
+10/10/03 01:00:39 INFO mapred.JobClient: Job complete: job_201010022212_0001
+10/10/03 01:00:39 INFO mapred.JobClient: Counters: 17
+10/10/03 01:00:39 INFO mapred.JobClient:   Job Counters 
+10/10/03 01:00:39 INFO mapred.JobClient:     Launched reduce tasks=10
+10/10/03 01:00:39 INFO mapred.JobClient:     Launched map tasks=9
+10/10/03 01:00:39 INFO mapred.JobClient:     Data-local map tasks=9
+10/10/03 01:00:39 INFO mapred.JobClient:   FileSystemCounters
+10/10/03 01:00:39 INFO mapred.JobClient:     FILE_BYTES_READ=2029784660
+10/10/03 01:00:39 INFO mapred.JobClient:     HDFS_BYTES_READ=1115999396
+10/10/03 01:00:39 INFO mapred.JobClient:     FILE_BYTES_WRITTEN=2363533017
+10/10/03 01:00:39 INFO mapred.JobClient:     HDFS_BYTES_WRITTEN=1121231846
+10/10/03 01:00:39 INFO mapred.JobClient:   Map-Reduce Framework
+10/10/03 01:00:39 INFO mapred.JobClient:     Reduce input groups=5710993
+10/10/03 01:00:39 INFO mapred.JobClient:     Combine output records=0
+10/10/03 01:00:39 INFO mapred.JobClient:     Map input records=5706070
+10/10/03 01:00:39 INFO mapred.JobClient:     Reduce shuffle bytes=540627480
+10/10/03 01:00:39 INFO mapred.JobClient:     Reduce output records=5710993
+10/10/03 01:00:39 INFO mapred.JobClient:     Spilled Records=533220308
+10/10/03 01:00:39 INFO mapred.JobClient:     Map output bytes=3178952223
+10/10/03 01:00:39 INFO mapred.JobClient:     Combine input records=0
+10/10/03 01:00:39 INFO mapred.JobClient:     Map output records=135866462
+10/10/03 01:00:39 INFO mapred.JobClient:     Reduce input records=135866462
+root@ip-10-245-70-98:~# hadoop fs -ls /user/root/output/
+Found 11 items
+drwxrwxrwx   - root supergroup          0 2010-10-02 22:22 /user/root/output/_logs
+-rw-r--r--   3 root supergroup  111938622 2010-10-03 00:12 /user/root/output/part-r-00000
+-rw-r--r--   3 root supergroup  112101939 2010-10-03 00:17 /user/root/output/part-r-00001
+-rw-r--r--   3 root supergroup  112211263 2010-10-03 00:22 /user/root/output/part-r-00002
+-rw-r--r--   3 root supergroup  112232551 2010-10-03 00:27 /user/root/output/part-r-00003
+-rw-r--r--   3 root supergroup  112163420 2010-10-03 00:33 /user/root/output/part-r-00004
+-rw-r--r--   3 root supergroup  112425052 2010-10-03 00:38 /user/root/output/part-r-00005
+-rw-r--r--   3 root supergroup  111542158 2010-10-03 00:43 /user/root/output/part-r-00006
+-rw-r--r--   3 root supergroup  112628972 2010-10-03 00:48 /user/root/output/part-r-00007
+-rw-r--r--   3 root supergroup  111607368 2010-10-03 00:53 /user/root/output/part-r-00008
+-rw-r--r--   3 root supergroup  112380501 2010-10-03 00:58 /user/root/output/part-r-00009
+root@ip-10-245-70-98:~# s3cmd put part-r-0000* s3://dvk-cs462-hadoop-output/BFS1/
+part-r-00000 -> s3://dvk-cs462-hadoop-output/BFS1/part-r-00000  [1 of 10]
+ 111938622 of 111938622   100% in    8s    12.59 MB/s  done
+part-r-00001 -> s3://dvk-cs462-hadoop-output/BFS1/part-r-00001  [2 of 10]
+ 112101939 of 112101939   100% in    6s    16.15 MB/s  done
+part-r-00002 -> s3://dvk-cs462-hadoop-output/BFS1/part-r-00002  [3 of 10]
+ 112211263 of 112211263   100% in    5s    19.39 MB/s  done
+part-r-00003 -> s3://dvk-cs462-hadoop-output/BFS1/part-r-00003  [4 of 10]
+ 112232551 of 112232551   100% in    6s    16.48 MB/s  done
+part-r-00004 -> s3://dvk-cs462-hadoop-output/BFS1/part-r-00004  [5 of 10]
+ 112163420 of 112163420   100% in    7s    14.70 MB/s  done
+part-r-00005 -> s3://dvk-cs462-hadoop-output/BFS1/part-r-00005  [6 of 10]
+ 112425052 of 112425052   100% in    6s    16.51 MB/s  done
+part-r-00006 -> s3://dvk-cs462-hadoop-output/BFS1/part-r-00006  [7 of 10]
+ 111542158 of 111542158   100% in    5s    17.97 MB/s  done
+part-r-00007 -> s3://dvk-cs462-hadoop-output/BFS1/part-r-00007  [8 of 10]
+ 112628972 of 112628972   100% in    5s    18.60 MB/s  done
+part-r-00008 -> s3://dvk-cs462-hadoop-output/BFS1/part-r-00008  [9 of 10]
+ 111607368 of 111607368   100% in    7s    14.82 MB/s  done
+part-r-00009 -> s3://dvk-cs462-hadoop-output/BFS1/part-r-00009  [10 of 10]
+ 112380501 of 112380501   100% in    7s    13.42 MB/s  done
+
+Repeat x 3
+
+..........................................................................................
+
+03:00 AM dougvk:~/.hadoop-cloud                                                                           
+$ hadoop-ec2 terminate-cluster ebs-cluster                                                                
+        i-d57d64bf      ami-2d4aa444    ec2-184-73-136-63.compute-1.amazonaws.com       ip-10-203-53-178.ec2.internal   running pstam-keypair   m1.small        2010-10-05T06:56:19.000Z        us-east-1a
+        i-217c654b      ami-2d4aa444    ec2-174-129-112-56.compute-1.amazonaws.com      ip-10-112-38-187.ec2.internal   running pstam-keypair   m1.small        2010-10-05T06:56:58.000Z        us-east-1a
+Terminate all instances? [yes or no]: yes                                                                 
+Terminating cluster                                                                                       
+03:00 AM dougvk:~/.hadoop-cloud                                                                           
+$
+

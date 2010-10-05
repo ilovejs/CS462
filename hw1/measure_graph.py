@@ -30,6 +30,12 @@ def main():
     #get the graph from my edgelist file
     graph = Graph.Read_GraphML(file)
     print(graph)
-    print assortativity(graph)
+    print "Assortativity: " + str(assortativity(graph)) + "\n"
+    
+    #The transitivity measures the probability that two neighbors of a vertex are connected.
+    #In case of the average local transitivity this probability if calculated for each vertex 
+    #and then the average is taken for those vertices which have at least two neighbors.
+    #If there are no such vertices then NaN is returned. 
+    print "C(2) clustering: " + str(graph.transitivity_avglocal_undirected()) + "\n"
 
 main()

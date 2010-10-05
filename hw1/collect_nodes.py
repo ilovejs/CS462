@@ -1,9 +1,11 @@
 #!/usr/bin/python
 import re,sys
 
+#match anything hit by the BFS
 path = re.compile(r'\s+\d+\|[0-7]\|\d+')
 
 def collect(line, output):
+    #if match, then output to file
     if path.search(line):
         output.write(line)
 

@@ -28,8 +28,10 @@ def main():
     graph = Graph.Read_Edgelist("edge_list")
     titles = open("/home/accts/dev5/Downloads/titles-sorted.txt",'r').xreadlines()
     i = 1
+
+    #add metadata to graph
     for line in titles:
-        if i < 5614062: //stop after all the nodes have been covered
+        if i < 5614062: #stop after all the nodes have been covered
             line = str(line)
             graph.vs[i]["title"] = line[:len(line)-1]
             graph.vs[i]["original_num"] = i

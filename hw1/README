@@ -13,10 +13,10 @@ shell_sample.txt -- the commands I used to launch a persistent Cloudera Hadoop c
 
 RESULTS
 -------
-Nodes 35547
-Edges 1,514,061
-Assortativity: -0.0514
-C(2): .513
+Nodes 360,085 
+Edges 1,595,713
+Assortativity: -0.0728834430613
+C(2): .562626039742
 
 METADATA
 --------

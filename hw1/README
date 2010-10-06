@@ -6,17 +6,17 @@ BFS.java -- the MapReduce code I ran on AmazonEC2 with Cloudera Hadoop instances
 mod_links.py -- turned my 9GB of wikipedia's graph into one formatted for my BFS algorithm
 count_nodes.py -- allowed me to count how many nodes were reached in the BFS. Only needed 3 iterations.
 collect_nodes.py -- extracted the nodes reached by the BFS. Result was 'connected_component.txt'
-convert_component.py -- used igraph to attach metadata and construct graphml file from connected_component.txt
+create_edgelist.py -- creates edgelist from component
 measure_graph.py -- used igraph to measure assortativity and C(2) clustering of resulting graph
 
 shell_sample.txt -- the commands I used to launch a persistent Cloudera Hadoop cluster and output from Hadoop
 
 RESULTS
 -------
-Nodes 18,547
-Edges 221,187
-Assortativity: -0.234
-C(2): .614
+Nodes 35547
+Edges 1,514,061
+Assortativity: -0.0514
+C(2): .513
 
 METADATA
 --------

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys
+import sys,re
 from igraph import *
 
 def find_conductance(graph, name):
@@ -30,6 +30,6 @@ def main():
     graph = Graph.Read_GraphMLz(sys.argv[1])
 
     for interest in sys.argv[2:]:
-        print "Conductance of \'" + interest + "\':" + find_conductance(graph, interest)
+        print "Conductance of \'" + interest + "\': " + find_conductance(graph, interest)
 
 main()

@@ -3,3 +3,12 @@ HW1
 Collect graph of something interesting. In this case I used wikipedia's graph of around 6 million nodes,
 ran a Cloudera + EC2 Hadoop cluster BFS until I reached at least 10,000 nodes, then created the graph using
 python's igraph library. See hw1/ subfolder for code & further details.
+
+HW2
+---
+Part 1: Find interesting sets of my graph and their conductance.
+Part 2: Find the first and second eigenvectors of the lazy-walk matrix of my graph. Use this to find sets
+        of low conductance.
+Part 3: Evolve a random walk until the error of my vector falls below epsilon. At each step find the set
+        of lowest conductance.
+Part 4: Do the same as Part 3, but choose nodes randomly within the set found in Part 2.

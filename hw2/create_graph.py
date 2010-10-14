@@ -33,7 +33,10 @@ def main():
         title = vertex["title"]
 
         #sanitze title and add keywords to dictionary
-        title = ''.join(char for char in title if char in valid_chars)
+        if title != None or title == "":
+            title = ''.join(char for char in title if char in valid_chars)
+        else:
+            title = ""
         keywords = re.split('[_-]',title)
         for word in keywords:
             if len(word) > 2:

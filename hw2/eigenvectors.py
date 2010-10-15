@@ -22,12 +22,7 @@ def get_lazy(graph, u1):
     identity = zeros((len(u1),len(u1)))
     return .5*(dot(dot(degree_inv,adjacency),degree_inv) + identity)
 
-def approximate_u2(x, lazy_walk, u1):
-    #do calculation from PS2
-    x = x - (dot(u1,x)*u1)
-    x = x / (sqrt(dot(x,x)))
-    x = dot(lazy_walk,x)
-    return x
+def get_eigv2(graph, v2):
 
 def convergence(old_x, x):
     #set up lambda and mu from the ratio
@@ -37,12 +32,20 @@ def convergence(old_x, x):
 
     #check all values for convergence
     converged = True
+    epsilon = 1e-9
     for i in range(len(x)):
-        if abs(x[i] - (lambda_val*old_x[i])) > (mu*old_x[i]):
+        if abs(x[i] - (lambda_val*old_x[i])) > (mu*old_x[i]) + epsilon:
             converged = False
             break
 
     return converged
+
+def approximate_u2(x, lazy_walk, u1):
+    #do calculation from PS2
+    x = x - (dot(u1,x)*u1)
+    x = x / (sqrt(dot(x,x)))
+    x = dot(lazy_walk,x)
+    return x
 
 def get_u2(x, lazy_walk, u1):
     #start convergence, save x for comparison
@@ -60,23 +63,25 @@ def main():
     #graph = Graph.Read_GraphMLz(sys.argv[1])
     graph = Graph.Erdos_Renyi(40,.5)
     graph.to_undirected()
-    print(graph)
+
+    #create D^(1/2) and D^(-1/2) for conversion of vectors
+    degrees_inv = array([1 / sqrt(degree) for degree in graph.degree()])
+    degrees = array([sqrt(degree) for degree in graph.degree()])
 
     #implicitly calculate u1, initialize x to random gaussians
     m = float(len(graph.es))
-    u1 = array([degree/(2*m) for degree in graph.degree()])
+    v1 = array([degree/(2*m) for degree in graph.degree()])
+    u1 = degrees_inv*v1
     x = array([random.random() for i in range(len(u1))])
 
     #create lazy walk matrix and free up memory
     lazy_walk = get_lazy(graph, u1)
-    graph = None
 
     #get u2
     u2 = get_u2(x, lazy_walk, u1)
-    print u2
 
     #convert to v2 -- D^(1/2) * u2
-    #degrees = array([sqrt(degree) for degree in graph.degree()])
-    #v2 = degrees*u2
+    v2 = degrees*u2
+    eigv_2 = get_eigv2(graph,v2)
 
 main()

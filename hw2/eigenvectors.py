@@ -78,11 +78,14 @@ def get_u2(x, lazy_walk, u1):
     return x
 
 def get_cheegers(v2):
+    #sort by values by argument value (index of node)
     argsort_v2 = argsort(v2)
+    sorted_nodes = [int(el) for el in argsort_v2]
 
+    #get sets of highest v2(a)/d(a) value (up to half set size)
     cheeger_sets = []
-    for i in range(len(argsort_v2))[:0:-1]:
-        cheeger_sets.append(list(argsort_v2[len(argsort_v2):i-1:-1]))
+    for i in range(len(sorted_nodes)/2):
+        cheeger_sets.append(sorted_nodes[:i+1])
 
     return cheeger_sets
 
@@ -125,6 +128,8 @@ def main():
 
     #convert to v2 -- D^(1/2) * u2
     v2 = degrees*u2
+
+    #get eigenvalue of v2
     eigv_v2 = get_eigv2(graph,v2)
 
     #calculate conductance using cheeger's inequality
@@ -139,7 +144,15 @@ def main():
     #find set of lowest conductance
     for nodes in cheeger_sets:
         conductances.append(conductance(graph,nodes))
-    lowest = min(conductances)
-    print conductances
+    min_index = conductances.index(min(conductances))
+
+    #output relevant values
+    print "v2: " + str(v2)
+    print "Eigenvalue v2: " + str(eigv_v2)
+    print "Set of lowest conductance: " + str(cheeger_sets[min_index])
+    print "T value: " + str(min_index + 1)
+    print "Conductance value: " + str(min(conductances))
+    print "(Conductance(S(t))^2 / 4): " + str(min(conductances)**2 / 4.0)
+    print "Mu: " + str(1 - float(eigv_v2[0]))
 
 main()

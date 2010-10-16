@@ -69,24 +69,29 @@ def main():
     graph.to_undirected()
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
     graph.delete_edges(self_loops)
-    degrees = graph.degree()
 
     #calculate all initial values
     m = float(len(graph.es))
-    v1 = array([degree/(2*m) for degree in degrees])
+    v1 = array([degree/(2*m) for degree in graph.degree()])
     epsilon = sqrt(dot(v1,v1)) / 1000.0
-    #random_nodes = [int(random.random()*len(graph.vs)) for i in range(10)]
 
-    #initialize p0 to start in 10 random nodes
+    #get initial set from argv
+    nodes = re.split(', ',sys.argv[1])
+
+    #initialize p0 resize to size 1
     p = arange(len(graph.vs))
     for i in range(len(graph.vs)):
-        p[i] = 0.0
-        #if i in random_nodes:
-            #p[i] = 1.0
-    p[3] = 1.0
+        p[i] = 0
+        if i in random_nodes:
+            p[i] = 1
+    p = p / sqrt(dot(p,p))
 
     #get walk matrix from graph
     walk = get_walk(graph,v1)
+
+    #evolve until convergence
+    while convergence(p, v1, epsilon) != True:
+        p = dot(walk,p)
 
     #evolve and collect sets until convergence
     conductances = []

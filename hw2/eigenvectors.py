@@ -31,7 +31,7 @@ def get_eigv2(graph, v2):
             adjacency[i][j] = 1.0
             adjacency[j][i] = 1.0
 
-    #create inverse degree matrix D^(-1/2)
+    #create inverse degree matrix D^(-1)
     degree_inv = zeros((len(v2),len(v2)))
     degrees = graph.degree()
     for i in range(len(degrees)):

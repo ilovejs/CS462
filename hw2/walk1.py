@@ -24,6 +24,7 @@ def get_walk(graph,v1):
 def convergence(p, v1, epsilon):
     difference = p - v1
     error = sqrt(dot(difference,difference))
+    print error
     if error < epsilon:
         return True
     return False
@@ -73,17 +74,16 @@ def main():
 
     #calculate all initial values
     m = float(len(graph.es))
-    v1 = array([degree/(2*m) for degree in degrees])
+    v1 = array([float(degree)/(2.0*m) for degree in degrees])
     epsilon = sqrt(dot(v1,v1)) / 1000.0
-    #random_nodes = [int(random.random()*len(graph.vs)) for i in range(10)]
+    random_nodes = [int(random.random()*len(graph.vs)) for i in range(1)]
 
     #initialize p0 to start in 10 random nodes
     p = arange(len(graph.vs))
     for i in range(len(graph.vs)):
         p[i] = 0.0
-        #if i in random_nodes:
-            #p[i] = 1.0
-    p[3] = 1.0
+        if i in random_nodes:
+            p[i] = 1.0
 
     #get walk matrix from graph
     walk = get_walk(graph,v1)

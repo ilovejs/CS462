@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import numpy, igraph
+import numpy, igraph, sys
 from igraph import *
 from numpy import *
 
@@ -35,10 +35,13 @@ def get_conductances(graph,v2):
     argsort_v2 = argsort(v2)
     sorted_nodes = [int(el) for el in argsort_v2]
 
-    #get sets of highest v2(a)/d(a) value (up to half set size)
+    #get sets of highest v2(a)/d(a) value
+    #after half of set traversed, starts evaluating V-S
     conductances = []
     for i in range(len(sorted_nodes)/2):
         conductances.append(conductance(graph,sorted_nodes[:i+1]))
+    for i in range(len(sorted_nodes)/2,len(sorted_nodes)):
+        conductances.append(conductance(graph,sorted_nodes[len(sorted_nodes)/2:i+1]))
 
     return conductances
 
@@ -58,7 +61,7 @@ def conductance(graph,nodes):
 
 def main():
     #fix graph up
-    graph = Graph.Erdos_Renyi(40,.5)
+    graph = Graph.Read_GraphMLz(sys.argv[1])
     graph.to_undirected()
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
     graph.delete_edges(self_loops)
@@ -91,6 +94,6 @@ def main():
         for i in range(len(v1)):
             p_c[i] = p_c[i] / float(degrees[i])
         conductances.append(min(get_conductances(graph,p_c)))
-    print conductances
+    print "Conductances when walking from node " + str(random_node) + ": " + conductances
 
 main()

@@ -5,43 +5,50 @@ from numpy import *
 
 def get_lazy(graph, u1):
     #create adjacency 
-    adjacency = zeros((len(u1),len(u1)))
+    lazy_walk = zeros((len(u1),len(u1)))
     adj_list = graph.get_adjlist()
     for i in range(len(u1)):
         for j in adj_list[i]:
-            adjacency[i][j] = 1.0
-            adjacency[j][i] = 1.0
-    print adjacency
+            lazy_walk[i][j] = 1.0
+            lazy_walk[j][i] = 1.0
 
     #create inverse degree matrix D^(-1/2)
-    degree_inv = zeros((len(u1),len(u1)))
+    degree_inv = zeros(len(u1))
     degrees = graph.degree()
     for i in range(len(degrees)):
-        degree_inv[i][i] = 1.0 / sqrt(degrees[i])
-    print degree_inv
+        degree_inv[i] = 1.0 / sqrt(degrees[i])
 
     #return symmetric lazy walk matrix
-    identity = zeros((len(u1),len(u1)))
-    return .5*(dot(dot(degree_inv,adjacency),degree_inv) + identity)
+    for i in range(len(u1)):
+        for j in range(len(u1)):
+                lazy_walk[i][j] *= degree_inv[i]
+    for i in range(len(u1)):
+        for j in range(len(u1)):
+                lazy_walk[j][i] *= degree_inv[i]
+    return .5*(lazy_walk+identity(len(u1)))
 
 def get_eigv2(graph, v2):
     #create adjacency
-    adjacency = zeros((len(v2),len(v2)))
+    lazy_walk = zeros((len(v2),len(v2)))
     adj_list = graph.get_adjlist()
     for i in range(len(v2)):
         for j in adj_list[i]:
-            adjacency[i][j] = 1.0
-            adjacency[j][i] = 1.0
+            lazy_walk[i][j] = 1.0
+            lazy_walk[j][i] = 1.0
 
     #create inverse degree matrix D^(-1)
-    degree_inv = zeros((len(v2),len(v2)))
+    degree_inv = zeros(len(v2)) 
     degrees = graph.degree()
     for i in range(len(degrees)):
-        degree_inv[i][i] = 1.0 / degrees[i]
+        degree_inv[i] = 1.0 / degrees[i]
 
-    identity = zeros((len(v2),len(v2)))
-    walk = .5*(dot(adjacency,degree_inv) + identity)
-    result_v = dot(walk,v2)
+    for i in range(len(v2)):
+        for j in range(len(v2)):
+                lazy_walk[j][i] *= degree_inv[i]
+    lazy_walk = .5*(lazy_walk+identity(len(v2)))
+
+    #multiply walk and v2 -- ratio == eigenvalue
+    result_v = dot(lazy_walk,v2)
     return result_v / v2
 
 def convergence(old_x, x):
@@ -79,17 +86,17 @@ def get_u2(x, lazy_walk, u1):
 
     return x
 
-def get_cheegers(v2):
+def get_conductances(graph,v2):
     #sort by values by argument value (index of node)
     argsort_v2 = argsort(v2)
     sorted_nodes = [int(el) for el in argsort_v2]
 
-    #get sets of highest v2(a)/d(a) value
-    cheeger_sets = []
+    #get sets of highest v2(a)/d(a) value (up to half set size)
+    conductances = []
     for i in range(len(sorted_nodes)/2):
-        cheeger_sets.append(sorted_nodes[:i+1])
+        conductances.append(conductance(graph,sorted_nodes[:i+1]))
 
-    return cheeger_sets
+    return conductances
 
 def conductance(graph,nodes):
     #odd result if I don't convert to int
@@ -107,15 +114,14 @@ def conductance(graph,nodes):
 
 def main():
     #graph = Graph.Read_GraphMLz(sys.argv[1])
-    graph = Graph.Erdos_Renyi(40,.5)
+    graph = Graph.Erdos_Renyi(400,.1)
     graph.to_undirected()
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
     graph.delete_edges(self_loops)
-    degree_array = graph.degree()
 
     #create D^(1/2) and D^(-1/2) for conversion of vectors
-    degrees_inv = array([1 / sqrt(degree) for degree in degree_array])
-    degrees = array([sqrt(degree) for degree in degree_array])
+    degrees_inv = array([1 / sqrt(degree) for degree in graph.degree()])
+    degrees = array([sqrt(degree) for degree in graph.degree()])
 
     #implicitly calculate u1, initialize x to random gaussians
     m = float(len(graph.es))
@@ -136,25 +142,24 @@ def main():
     eigv_v2 = get_eigv2(graph,v2)
 
     #calculate conductance using cheeger's inequality
-    conductances = []
     v2_c = v2.copy()
 
     #use D^(1/2) to calculate v2(a) / d(a) for cheeger
     for i in range(len(v2)):
         v2_c[i] = v2_c[i] / (degrees[i]*degrees[i])
-    cheeger_sets = get_cheegers(v2_c)
+    conductances = get_conductances(graph,v2_c)
 
     #find set of lowest conductance
-    for nodes in cheeger_sets:
-        conductances.append(conductance(graph,nodes))
     min_index = conductances.index(min(conductances))
+    min_set = argsort(v2_c)[:min_index+1]
 
     #output relevant values
-    print "v2: " + str(v2)
-    print "Eigenvalue v2: " + str(eigv_v2[0])
-    print "Set of lowest conductance: " + str(cheeger_sets[min_index])
-    print "Conductance value: " + str(min(conductances))
-    print "(Conductance(S(t))^2 / 4): " + str(min(conductances)**2 / 4.0)
-    print "Mu: " + str(1 - float(eigv_v2[0]))
+    #print "v2: " + str(v2)
+    #print "Eigenvalue v2: " + str(eigv_v2)
+    #print "Set of lowest conductance: " + str(min_set)
+    #print "T value: " + str(min_index + 1)
+    #print "Conductance value: " + str(min(conductances))
+    #print "(Conductance(S(t))^2 / 4): " + str(min(conductances)**2 / 4.0)
+    #print "Mu: " + str(1 - float(eigv_v2[0]))
 
 main()

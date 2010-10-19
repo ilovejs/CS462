@@ -113,8 +113,8 @@ def conductance(graph,nodes):
     return (total_edges - edges_inside) / total_edges
 
 def main():
-    #graph = Graph.Read_GraphMLz(sys.argv[1])
-    graph = Graph.Erdos_Renyi(400,.1)
+    graph = Graph.Read_GraphMLz(sys.argv[1])
+    #graph = Graph.Erdos_Renyi(400,.1)
     graph.to_undirected()
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
     graph.delete_edges(self_loops)
@@ -154,12 +154,12 @@ def main():
     min_set = argsort(v2_c)[:min_index+1]
 
     #output relevant values
-    #print "v2: " + str(v2)
-    #print "Eigenvalue v2: " + str(eigv_v2)
-    #print "Set of lowest conductance: " + str(min_set)
-    #print "T value: " + str(min_index + 1)
-    #print "Conductance value: " + str(min(conductances))
-    #print "(Conductance(S(t))^2 / 4): " + str(min(conductances)**2 / 4.0)
-    #print "Mu: " + str(1 - float(eigv_v2[0]))
+    print "v2: " + str(v2)
+    print "Eigenvalue v2: " + str(eigv_v2)
+    print "Set of lowest conductance: " + str(min_set)
+    print "T value: " + str(min_index + 1)
+    print "Conductance value: " + str(min(conductances))
+    print "(Conductance(S(t))^2 / 4): " + str(min(conductances)**2 / 4.0)
+    print "Mu: " + str(1 - float(eigv_v2[0]))
 
 main()

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import numpy, igraph
+import numpy, igraph, sys
 from igraph import *
 from numpy import *
 
@@ -58,7 +58,7 @@ def conductance(graph,nodes):
 
 def main():
     #fix graph up
-    graph = Graph.Erdos_Renyi(40,.5)
+    graph = Graph.Read_GraphMLz(sys.argv[1])
     graph.to_undirected()
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
     graph.delete_edges(self_loops)

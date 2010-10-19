@@ -86,7 +86,6 @@ def get_walk(graph,v1):
 def convergence(p, v1, epsilon):
     difference = p - v1
     error = sqrt(dot(difference,difference))
-    print error
     if error < epsilon:
         return True
     return False
@@ -128,6 +127,7 @@ def conductance(graph,nodes):
 
 def main():
     #fix graph up
+    #graph = Graph.Read_GraphMLz(sys.argv[1])
     graph = Graph.Erdos_Renyi(40,.5)
     graph.to_undirected()
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
@@ -138,14 +138,16 @@ def main():
     m = float(len(graph.es))
     v1 = array([float(degree)/(2.0*m) for degree in degrees])
     epsilon = sqrt(dot(v1,v1)) / 1000.0
+
+    #take input set S, split it and choose random node to walk from
     nodes = [int(i) for i in re.split(', ', sys.argv[1])]
-    random_nodes = [nodes[int(random.random()*len(nodes))] for i in range(1)]
+    random_node = int(random.random()*len(nodes))
 
     #initialize p0 to start in 10 random nodes
     p = arange(len(graph.vs))
     for i in range(len(graph.vs)):
         p[i] = 0.0
-        if i in random_nodes:
+        if i == random_node:
             p[i] = 1.0
     print p
 

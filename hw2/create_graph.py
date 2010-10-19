@@ -7,7 +7,7 @@ from igraph import *
 def main():
     #get the graph from my edgelist file
     graph = Graph.Read_Edgelist("edge_list")
-    titles = open("/home/dougvk/Downloads/titles-sorted.txt",'r').xreadlines()
+    titles = open("/home/accts/dev5/Downloads/titles-sorted.txt",'r').xreadlines()
 
 
     #add metadata to graph
@@ -52,5 +52,6 @@ def main():
 
     print(graph)
     graph.write_graphmlz("wiki.graphmlz")
+    graph.write_graphml("wiki.graphml")
 
 main()

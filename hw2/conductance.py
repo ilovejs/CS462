@@ -6,7 +6,6 @@ from igraph import *
 def find_conductance(graph, name):
     #convert to undirected and remove self-loops
     graph.to_undirected()
-    print(graph)
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
     graph.delete_edges(self_loops)
 

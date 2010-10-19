@@ -11,12 +11,14 @@ def get_lazy(graph, u1):
         for j in adj_list[i]:
             adjacency[i][j] = 1.0
             adjacency[j][i] = 1.0
+    print adjacency
 
     #create inverse degree matrix D^(-1/2)
     degree_inv = zeros((len(u1),len(u1)))
     degrees = graph.degree()
     for i in range(len(degrees)):
         degree_inv[i][i] = 1.0 / sqrt(degrees[i])
+    print degree_inv
 
     #return symmetric lazy walk matrix
     identity = zeros((len(u1),len(u1)))
@@ -82,7 +84,7 @@ def get_cheegers(v2):
     argsort_v2 = argsort(v2)
     sorted_nodes = [int(el) for el in argsort_v2]
 
-    #get sets of highest v2(a)/d(a) value (up to half set size)
+    #get sets of highest v2(a)/d(a) value
     cheeger_sets = []
     for i in range(len(sorted_nodes)/2):
         cheeger_sets.append(sorted_nodes[:i+1])
@@ -109,10 +111,11 @@ def main():
     graph.to_undirected()
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
     graph.delete_edges(self_loops)
+    degree_array = graph.degree()
 
     #create D^(1/2) and D^(-1/2) for conversion of vectors
-    degrees_inv = array([1 / sqrt(degree) for degree in graph.degree()])
-    degrees = array([sqrt(degree) for degree in graph.degree()])
+    degrees_inv = array([1 / sqrt(degree) for degree in degree_array])
+    degrees = array([sqrt(degree) for degree in degree_array])
 
     #implicitly calculate u1, initialize x to random gaussians
     m = float(len(graph.es))
@@ -148,9 +151,8 @@ def main():
 
     #output relevant values
     print "v2: " + str(v2)
-    print "Eigenvalue v2: " + str(eigv_v2)
+    print "Eigenvalue v2: " + str(eigv_v2[0])
     print "Set of lowest conductance: " + str(cheeger_sets[min_index])
-    print "T value: " + str(min_index + 1)
     print "Conductance value: " + str(min(conductances))
     print "(Conductance(S(t))^2 / 4): " + str(min(conductances)**2 / 4.0)
     print "Mu: " + str(1 - float(eigv_v2[0]))

@@ -34,4 +34,6 @@ def main():
     #sort data in descending order based on size of set
     data = sorted(data, key=itemgetter(1), reverse=True)
     print data[:10]
+    for name in [result[0] for result in data[:10]]:
+        print name + " ",
 main()

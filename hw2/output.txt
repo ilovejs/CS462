@@ -1,0 +1,13 @@
+[('eleutherodactylus', 228), ('squirrel', 207), ('mouse', 183), ('island', 178), ('river', 164), ('frog', 161), ('rat', 158), ('black', 141), ('red', 137), ('white', 134)]
+eleutherodactylus  squirrel  mouse  island  river  frog  rat  black  red  white 
+     
+Conductance of 'eleutherodactylus': 0.900779220779
+Conductance of 'squirrel': 0.408649602824
+Conductance of 'mouse': 0.835119538335
+Conductance of 'island': 0.949152542373
+Conductance of 'river': 0.972093023256
+Conductance of 'frog': 0.893169310456
+Conductance of 'rat': 0.786931818182
+Conductance of 'black': 0.961190168176
+Conductance of 'red': 0.975229724331
+Conductance of 'white': 0.970456005138

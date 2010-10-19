@@ -1,0 +1,16 @@
+HW2
+---
+conductance.py -- finds the conductance of the sets containing the words found in the input data
+create_graph.py -- creates a tagged version of my graph, mapping <word>->[node set containing <word>]
+eigenvectors.py -- finds v1 and v2 and lambda(2) of graph. finds smallest set from v2.
+largest_sets.py -- goes through the graph file and finds the largest connected sets containing <word>
+walk1.py -- chooses a random node from graph to walk from. calculates smallest conductance at each step.
+walk2.py -- chooses a random node from given set to walk from. calculates smallest conductance at each step.
+
+output.txt -- the output from conductance.py; the only program that can run on my graph in reasonable time.
+
+NOTE
+----
+My graph is 20,000 nodes. Minimum graph size was 10,000. Matrix multiplication is O(n^3). How
+are my programs supposed to end in reasonable time? I computed instead on Erdos Renyi graphs,
+which you can edit (I used 40 nodes p=.5).

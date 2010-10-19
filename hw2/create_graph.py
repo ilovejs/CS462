@@ -7,7 +7,7 @@ from igraph import *
 def main():
     #get the graph from my edgelist file
     graph = Graph.Read_Edgelist("edge_list")
-    titles = open("/home/dougvk/Downloads/titles-sorted.txt",'r').xreadlines()
+    titles = open("/home/accts/dev5/Downloads/titles-sorted.txt",'r').xreadlines()
 
 
     #add metadata to graph
@@ -33,7 +33,10 @@ def main():
         title = vertex["title"]
 
         #sanitze title and add keywords to dictionary
-        title = ''.join(char for char in title if char in valid_chars)
+        if title != None or title == "":
+            title = ''.join(char for char in title if char in valid_chars)
+        else:
+            title = ""
         keywords = re.split('[_-]',title)
         for word in keywords:
             if len(word) > 2:
@@ -49,5 +52,6 @@ def main():
 
     print(graph)
     graph.write_graphmlz("wiki.graphmlz")
+    graph.write_graphml("wiki.graphml")
 
 main()

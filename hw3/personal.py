@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import igraph, numpy, scipy, sys
+import igraph, numpy, scipy, sys, random
 from igraph import *
 from numpy import *
 from scipy import *
@@ -24,15 +24,48 @@ def get_walk(graph, degree):
     
     return walk
 
+def get_conductance(graph,nodes):
+    nodes = [int(entry) for entry in nodes]
+
+    #get vertex set and subgraph set to compare differences
+    vertices = graph.vs.select(nodes)
+    subgraph = graph.subgraph(nodes)
+
+    #get relevant data from vertex set and subgraph
+    edges_inside = float(sum(subgraph.degree()))
+    total_edges = float(sum(vertices.degree()))
+
+    return (total_edges - edges_inside) / total_edges
+
+def report_conductance(graph,sort_p,alpha):
+    lowest = [1e9,1e9]
+    size = len(graph.vs)
+    for i in range(size/2):
+        conductance = get_conductance(graph, sort_p[:i+1])
+        if conductance < lowest[0]:
+            lowest[0] = conductance
+            lowest[1] = i+1
+    for i in range(size/2):
+        conductance = get_conductance(graph, sort_p[size/2:(size/2)+i+1])
+        if conductance < lowest[0]:
+            lowest[0] = conductance
+            lowest[1] = i+1
+    print "Lowest conductance for alpha %s is size %s and conductance %s" % (alpha, lowest[1], lowest[0])
+
 def main():
     alpha = float(sys.argv[1])
     graph = Graph.Erdos_Renyi(40,.5)
+    graph.to_undirected()
+    self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
+    graph.delete_edges(self_loops)
+    
     degree = graph.degree()
     size = len(graph.vs)
 
     #create X(u)
     chi_u = zeros(size)
-    chi_u[size/2] = 1.0
+    chi_u[int(random.random()*size)] = 1.0
+    print chi_u
 
     #transform walk and X(u) to find personal pagerank
     walk = get_walk(graph, degree)
@@ -41,28 +74,27 @@ def main():
     chi_u *= alpha
 
     #find p(u)
-    answer = cg(walk,chi_u,tol=1e-9)[0]
-    #report_conductance(graph, answer, alpha)
+    p_u = cg(walk,chi_u,tol=1e-9)[0]
 
     #find set T from sorted p(u)
     well_spread = True
-    sort_ans = list(argsort(answer))
-    sort_ans.reverse()
+    sort_p = list(argsort(p_u))
+    sort_p.reverse()
+    report_conductance(graph, sort_p, alpha)
 
     #calculate limit val
     d_T = 0.0
     d_V = sum(degree)
     for i in range(size/2):
-        d_T += degree[sort_ans[i]]
+        d_T += degree[sort_p[i]]
     limit = (3.0*d_T) / (2.0*d_V)
 
     #report if p(u) is well spread
     for i in range(size/2):
-        if answer[sort_ans[i]] > limit:
+        if p_u[sort_p[i]] > limit:
             well_spread = False
             break
 
-    print answer
-    print dot(walk,answer)
+    print "p(u) with alpha %s is well spread? %s" % (alpha, well_spread)
 
 main()

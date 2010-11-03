@@ -64,7 +64,7 @@ def main():
 
     #create X(u)
     chi_u = zeros(size)
-    chi_u[int(random.random()*size)] = 1.0
+    chi_u[int(random.random()*(size-1))] = 1.0
     print chi_u
 
     #transform walk and X(u) to find personal pagerank

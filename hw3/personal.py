@@ -65,7 +65,6 @@ def main():
     #create X(u)
     chi_u = zeros(size)
     chi_u[int(random.random()*(size-1))] = 1.0
-    print chi_u
 
     #transform walk and X(u) to find personal pagerank
     walk = get_walk(graph, degree)
@@ -76,11 +75,18 @@ def main():
     #find p(u)
     p_u = cg(walk,chi_u,tol=1e-9)[0]
 
+    #find conductance by creating q(u) = p(u) / d(u)
+    q_u = p_u.copy()
+    for index in range(len(q_u)):
+        q_u[index] /= degree[index]
+    sort_q = list(argsort(q_u))
+    sort_q.reverse()
+    report_conductance(graph, sort_q, alpha)
+
     #find set T from sorted p(u)
     well_spread = True
     sort_p = list(argsort(p_u))
     sort_p.reverse()
-    report_conductance(graph, sort_p, alpha)
 
     #calculate limit val
     d_T = 0.0

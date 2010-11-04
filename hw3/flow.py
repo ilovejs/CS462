@@ -3,6 +3,39 @@ import igraph, numpy, scipy, sys, random
 from igraph import *
 from numpy import *
 from scipy import *
+from scipy.sparse import linalg
+from scipy.sparse.linalg import *
+
+def get_L(graph, size):
+    laplacian = zeros((size,size))
+    degree = graph.degree()
+
+    #laplacian == D - A
+    adj_list = graph.get_adjlist()
+    for i in range(size):
+        for j in adj_list[i]:
+            if i != j:
+                laplacian[i][j] = -1.0
+                laplacian[j][i] = -1.0
+        laplacian[i][i] = degree[i]
+
+    return laplacian.copy()
+
+def get_flow(graph, W, size):
+    b = zeros(size)
+
+    #calculate b. go through all nodes in G
+    for i in range(size):
+        #sum up flow coming out of W
+        for node in W:
+            if i != node:
+                try:
+                    graph.get_eid(i,node)
+                    #add in flow if edge exists
+                    b[i] += 2
+                except:
+                    pass
+    return b
 
 def main():
     graph = Graph.Erdos_Renyi(40,.5)
@@ -20,19 +53,21 @@ def main():
         W.add(int(random_node))
     W = list(W)
 
-    #calculate the mean of W -- u(x)
-    size_W = len(W)
-    sum_W = sum([int(2) for node in W])
-    #sum_W = sum([int(graph.vs[node]["original_num"]) for node in W])
-    mean_W = sum_W / size_W
+    #create Laplacian of graph
+    L = get_L(graph, size)
 
-    #calculate error in mean function
+    #create b(x) -- flow coming out of set W
+    b = get_flow(graph, W, size)
+
+    #solve for u(x)
+    u_x = cg(L,b)[0]
+    print u_x
+
+    #calculate error in between two functions
     error = 0
     for node in graph.vs:
-        error += pow(2 - mean_W, 2)
-        #error += pow(int(node["original_num"]) - mean_W)
+        error += pow(0 - u_x[node.index], 2)
     error = sqrt(error)
-
     print error
 
 main()

@@ -12,3 +12,11 @@ Part 2: Find the first and second eigenvectors of the lazy-walk matrix of my gra
 Part 3: Evolve a random walk until the error of my vector falls below epsilon. At each step find the set
         of lowest conductance.
 Part 4: Do the same as Part 3, but choose nodes randomly within the set found in Part 2.
+
+HW3
+---
+Part 1: Find personal pagerank vectors of graph using different values
+        of alpha. Report whether p is well-spread (stop when it is).
+Part 2: Use electrical flow to guess at values of function outside a
+        randomly chosen set W of G. Compare the error of this to a dumb
+        guess.

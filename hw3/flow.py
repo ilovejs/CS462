@@ -8,7 +8,6 @@ from scipy.sparse.linalg import *
 
 def get_L(graph, size):
     laplacian = zeros((size,size))
-    degree = graph.degree()
 
     #laplacian == D - A
     adj_list = graph.get_adjlist()
@@ -17,7 +16,7 @@ def get_L(graph, size):
             if i != j:
                 laplacian[i][j] = -1.0
                 laplacian[j][i] = -1.0
-        laplacian[i][i] = degree[i]
+        laplacian[i][i] = int( graph.vs[i]["original_num"] )
 
     return laplacian.copy()
 
@@ -32,13 +31,13 @@ def get_flow(graph, W, size):
                 try:
                     graph.get_eid(i,node)
                     #add in flow if edge exists
-                    b[i] += 2
+                    b[i] += int(graph.vs[node]["original_num"])
                 except:
                     pass
     return b
 
 def main():
-    graph = Graph.Erdos_Renyi(40,.5)
+    graph.Read_GraphMLz("wiki.graphmlz")
     graph.to_undirected()
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
     graph.delete_edges(self_loops)
@@ -61,12 +60,11 @@ def main():
 
     #solve for u(x)
     u_x = cg(L,b)[0]
-    print u_x
 
     #calculate error in between two functions
     error = 0
     for node in graph.vs:
-        error += pow(0 - u_x[node.index], 2)
+        error += pow(int(node["original_num"] - u_x[node.index], 2)
     error = sqrt(error)
     print error
 

@@ -46,7 +46,7 @@ def report_conductance(graph,sort_p,alpha):
             lowest[0] = conductance
             lowest[1] = i+1
     for i in range(size/2):
-        conductance = get_conductance(graph, sort_p[size/2:(size/2)+i+1])
+        conductance = get_conductance(graph, sort_p[size/2+i:])
         if conductance < lowest[0]:
             lowest[0] = conductance
             lowest[1] = i+1
@@ -54,7 +54,7 @@ def report_conductance(graph,sort_p,alpha):
 
 def main():
     alpha = float(sys.argv[1])
-    graph = Graph.Erdos_Renyi(40,.5)
+    graph = Read.GraphMLz("wiki.graphmlz")
     graph.to_undirected()
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
     graph.delete_edges(self_loops)

@@ -1,10 +1,11 @@
 #!/usr/bin/python
-import igraph, numpy, scipy, sys, random
+import igraph, numpy, sys, random, pysparse
 from igraph import *
 from numpy import *
-from scipy import *
-from scipy.sparse import linalg
-from scipy.sparse.linalg import *
+from pysparse import spmatrix
+from pysparse import precon
+from pysparse import itsolvers
+from pysparse.itsolvers import *
 
 def get_L(graph, size):
     laplacian = zeros((size,size))
@@ -37,7 +38,7 @@ def get_flow(graph, W, size):
     return b
 
 def main():
-    graph.Read_GraphMLz("wiki.graphmlz")
+    graph = Graph.Read_GraphMLz("wiki.graphmlz")
     graph.to_undirected()
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
     graph.delete_edges(self_loops)
@@ -59,12 +60,21 @@ def main():
     b = get_flow(graph, W, size)
 
     #solve for u(x)
-    u_x = cg(L,b)[0]
+    A = spmatrix.ll_mat_sym(size)
+    for i in range(size):
+        for j in range(size):
+            if j <= i:
+                A[i,j] = L[i][j]
+    walk = None
+    u_x = numpy.empty(size)
+    info, iter_iter, relres = pcg(A.to_sss(),b,u_x,1e-12,10000)
+    A = None
+    print "%s : %s : %s" % (info, iter_iter, relres)
 
     #calculate error in between two functions
     error = 0
     for node in graph.vs:
-        error += pow(int(node["original_num"] - u_x[node.index], 2)
+        error += pow(int(node["original_num"]) - u_x[node.index], 2)
     error = sqrt(error)
     print error
 

@@ -1,0 +1,114 @@
+07:48 PM dev5:~/code/CS462/hw3 [hw3]
+$ ./personal.py .5
+Lowest conductance for alpha 0.5 is size 8730 and conductance 0.419068041399
+p(u) with alpha 0.5 is well spread? True
+Lowest conductance for alpha 0.5 is size 8000 and conductance 0.494964162431
+p(u) with alpha 0.5 is well spread? True
+Lowest conductance for alpha 0.5 is size 8793 and conductance 0.424667457648
+p(u) with alpha 0.5 is well spread? True
+Lowest conductance for alpha 0.5 is size 8837 and conductance 0.479545961985
+p(u) with alpha 0.5 is well spread? True
+Lowest conductance for alpha 0.5 is size 8833 and conductance 0.413582452278
+p(u) with alpha 0.5 is well spread? True
+Lowest conductance for alpha 0.5 is size 8293 and conductance 0.466338706100
+p(u) with alpha 0.5 is well spread? True
+Lowest conductance for alpha 0.5 is size 8054 and conductance 0.496422921451
+p(u) with alpha 0.5 is well spread? True
+Lowest conductance for alpha 0.5 is size 8382 and conductance 0.467238769411
+p(u) with alpha 0.5 is well spread? True
+Lowest conductance for alpha 0.5 is size 8634 and conductance 0.423533335549
+p(u) with alpha 0.5 is well spread? True
+Lowest conductance for alpha 0.5 is size 8969 and conductance 0.454787964148
+p(u) with alpha 0.5 is well spread? True
+
+07:31 PM dev5:~/code/CS462/hw3 [hw3]
+$ ./personal.py .25
+Lowest conductance for alpha 0.25 is size 8927 and conductance 0.407914823658
+p(u) with alpha 0.25 is well spread? True
+
+07:52 PM dev5:~/code/CS462/hw3 [hw3]
+$ ./personal.py .125
+Lowest conductance for alpha 0.125 is size 10186 and conductance 0.420242741598
+p(u) with alpha 0.125 is well spread? True
+
+---------------------------------------
+
+7:25 PM dev5:~/code/CS462/hw3 [hw3]
+$ ./flow.py .1
+637851946.51
+694957267.168
+629880710.987
+617639296.374
+683402719.741
+610858957.11
+609042735.355
+651222148.377
+646330803.61
+668792503.948
+
+07:28 PM dev5:~/code/CS462/hw3 [hw3]
+$ ./flow.py .5
+437851510.96
+482576790.121
+403352026.672
+444308373.97
+438564503.956
+458702063.832
+424931775.049
+418468603.11
+404156439.472
+479599961.363
+
+07:35 PM dev5:~/code/CS462/hw3 [hw3]
+$ ./flow.py .9
+337851032.805
+391594469.83
+336048815.142
+349417973.716
+340136830.393
+372115055.64
+325151475.032
+370589164.284
+399441048.43
+301562909.803
+
+-----------------------------------
+
+07:22 PM dev5:~/code/CS462/hw3 [hw3]
+$ ./mean.py .1
+218030284.133
+218014097.69
+218003171.271
+217992374.522
+218026065.77
+218016916.778
+217996350.755
+217994610.967
+217989890.76
+217990501.443
+
+07:27 PM dev5:~/code/CS462/hw3 [hw3]
+$ ./mean.py .5
+217991574.152
+217991287.716
+217989841.38
+217991455.464
+217996025.335
+217989837.96
+217989838.837
+218006174.113
+217997188.85
+217990052.996
+
+07:30 PM dev5:~/code/CS462/hw3 [hw3]
+$ ./mean.py .9
+217991191.46
+217989837.992
+217990693.449
+217990732.135
+217989837.99
+217990197.418
+217991696.401
+217989838.879
+217989915.751
+217992245.025

@@ -1,0 +1,5 @@
+flow.py -- guesses the value at nodes outside of set W using electrical flow. used my graphs "original num" value for the actual value at each node. outputs the error.
+
+mean.py -- guesses the value at nods outside of set W using the mean of W as the guess. outputs the error.
+
+personal.py -- calculates personal pagerank from a random node with a given alpha. prints set of lowest conductance and whether p(u) is well spread.

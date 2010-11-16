@@ -1,10 +1,11 @@
 #!/usr/bin/python
-import igraph, numpy, scipy, sys, random
+import igraph, numpy, sys, random, pysparse
 from igraph import *
 from numpy import *
-from scipy import *
-from scipy.sparse import linalg
-from scipy.sparse.linalg import *
+from pysparse import spmatrix
+from pysparse import precon
+from pysparse import itsolvers
+from pysparse.itsolvers import *
 
 def get_walk(graph, degree):
     size = len(graph.vs)
@@ -24,7 +25,7 @@ def get_walk(graph, degree):
     
     return walk
 
-def get_conductance(graph,nodes):
+def get_conductance(graph,nodes,d_V):
     nodes = [int(entry) for entry in nodes]
 
     #get vertex set and subgraph set to compare differences
@@ -35,18 +36,15 @@ def get_conductance(graph,nodes):
     edges_inside = float(sum(subgraph.degree()))
     total_edges = float(sum(vertices.degree()))
 
-    return (total_edges - edges_inside) / total_edges
+    return (total_edges - edges_inside) / min(d_V - total_edges, total_edges)
 
 def report_conductance(graph,sort_p,alpha):
     lowest = [1e9,1e9]
     size = len(graph.vs)
-    for i in range(size/2):
-        conductance = get_conductance(graph, sort_p[:i+1])
-        if conductance < lowest[0]:
-            lowest[0] = conductance
-            lowest[1] = i+1
-    for i in range(size/2):
-        conductance = get_conductance(graph, sort_p[size/2+i:])
+    d_V = sum(graph.degree())
+
+    for i in range(size):
+        conductance = get_conductance(graph, sort_p[:i+1], d_V)
         if conductance < lowest[0]:
             lowest[0] = conductance
             lowest[1] = i+1
@@ -54,7 +52,7 @@ def report_conductance(graph,sort_p,alpha):
 
 def main():
     alpha = float(sys.argv[1])
-    graph = Read.GraphMLz("wiki.graphmlz")
+    graph = Graph.Read_GraphMLz("wiki.graphmlz")
     graph.to_undirected()
     self_loops = [edge.index for edge in graph.es if edge.source == edge.target]
     graph.delete_edges(self_loops)
@@ -73,7 +71,16 @@ def main():
     chi_u *= alpha
 
     #find p(u)
-    p_u = cg(walk,chi_u,tol=1e-9)[0]
+    A = spmatrix.ll_mat_sym(size)
+    for i in range(size):
+        for j in range(size):
+            if j <= i:
+                A[i,j] = walk[i][j]
+    walk = None
+    p_u = numpy.empty(size)
+    info, iter_iter, relres = pcg(A.to_sss(),chi_u,p_u,1e-12,10000)
+    A = None
+    print "%s : %s : %s" % (info, iter_iter, relres)
 
     #find conductance by creating q(u) = p(u) / d(u)
     q_u = p_u.copy()

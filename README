@@ -20,3 +20,7 @@ Part 1: Find personal pagerank vectors of graph using different values
 Part 2: Use electrical flow to guess at values of function outside a
         randomly chosen set W of G. Compare the error of this to a dumb
         guess.
+
+HW4
+---
+Evaluate various link predictors on own graph

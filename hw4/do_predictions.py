@@ -11,19 +11,28 @@ def main():
 
     edge_list = graph.get_edgelist()
     edge_set = set()
-    for edge in edge_list:
-        edge_set.add(edge[0])
-        edge_set.add(edge[1])
+    node_set = set()
+    while len(edge_set) < 1000:
+        index = random.randint(0,len(edge_list))
+        edge_set.add(edge_list[index])
+    for edge in edge_set:
+        node_set.add(edge[0])
+        node_set.add(edge[1])
 
-    nodes = sorted(list(edge_set))
+    edge_list = list(edge_set)
+    nodes = sorted(list(node_set))
 
     #shortest distance
     scores = []
     path_lengths = graph.shortest_paths_dijkstra(nodes,mode=ALL)
     for x in nodes:
         for y in [node for node in nodes if node > x]:
-            if path_lengths[x][y] == 2:
-                scores.append((x,y))
+            try:
+                edge_list.index((x,y))
+            except:
+                if path_lengths[x][y] == 2:
+                    scores.append((x,y))
+
     print scores
 
     neighbors = {}
@@ -44,9 +53,13 @@ def main():
     for x in nodes:
         x_set = set(neighbors[str(x)])
         for y in [node for node in nodes if node > x]:
-            y_set = set(neighbors[str(y)])
-            score = len(x_set & y_set)
-            scores.append(((x,y),score))
+            try:
+                edge_list.index((x,y))
+            except:
+                y_set = set(neighbors[str(y)])
+                score = len(x_set & y_set)
+                scores.append(((x,y),score))
+
 
     scores = sorted(scores, key=lambda score: score[1], reverse=True)
     print scores
@@ -56,15 +69,18 @@ def main():
     for x in nodes:
         x_set = set(neighbors[str(x)])
         for y in [node for node in nodes if node > x]:
-            y_set = set(neighbors[str(y)])
-            numerator = len(x_set & y_set)
-            denominator = len(x_set | y_set)
-            if denominator != 0:
-                score = float(numerator) / float(denominator)
-            if denominator == 0:
-                score = 0
+            try:
+                edge_list.index((x,y))
+            except:
+                y_set = set(neighbors[str(y)])
+                numerator = len(x_set & y_set)
+                denominator = len(x_set | y_set)
+                if denominator != 0:
+                    score = float(numerator) / float(denominator)
+                if denominator == 0:
+                    score = 0
 
-            scores.append(((x,y),score))
+                scores.append(((x,y),score))
 
     scores = sorted(scores, key=lambda score: score[1], reverse=True)
     print scores
@@ -74,13 +90,16 @@ def main():
     for x in nodes:
         x_set = set(neighbors[str(x)])
         for y in [node for node in nodes if node > x]:
-            y_set = set(neighbors[str(y)])
-            features = list(x_set & y_set)
-            score = 0
-            for feature in features:
-                score += 1.0 / log(len(neighbors[str(feature)]))
+            try:
+                edge_list.index((x,y))
+            except:
+                y_set = set(neighbors[str(y)])
+                features = list(x_set & y_set)
+                score = 0
+                for feature in features:
+                    score += 1.0 / log(len(neighbors[str(feature)]))
 
-            scores.append(((x,y),score))
+                scores.append(((x,y),score))
 
     scores = sorted(scores, key=lambda score: score[1], reverse=True)
     print scores
@@ -90,10 +109,13 @@ def main():
     for x in nodes:
         x_set = set(neighbors[str(x)])
         for y in [node for node in nodes if node > x]:
-            y_set = set(neighbors[str(y)])
-            score = len(x_set) * len(y_set)
+            try:
+                edge_list.index((x,y))
+            except:
+                y_set = set(neighbors[str(y)])
+                score = len(x_set) * len(y_set)
 
-            scores.append(((x,y),score))
+                scores.append(((x,y),score))
 
     scores = sorted(scores, key=lambda score: score[1], reverse=True)
     print scores

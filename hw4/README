@@ -1,0 +1,12 @@
+03:16 PM dev5:~/code/CS462/hw4 [hw4]
+$ ./do_predictions.py 
+Preferential attachment: 0.13829787234
+Adamic/Adar: 0.13829787234
+Jaccard: 0.122340425532             
+Common Neighbor: 0.143617021277
+Distance: 0.05333333333
+
+The implementation of these link predictors was pretty straighforward once
+you get the g_training graph and the neighbors list. Overall, distance consistently
+performed the worst (I got a 0 once) and the rest performed pretty much on a similar
+level.

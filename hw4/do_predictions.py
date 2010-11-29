@@ -42,7 +42,7 @@ def print_evaluation(graph,attachment,adamic_adar,jaccard,common_neighbor,shorte
     num_distance = 0
     for el in shortest_distance:
         try:
-            graph.get_eid(el[0][0],el[0][1])
+            graph.get_eid(el[0],el[1])
             num_distance += 1
         except:
             pass
